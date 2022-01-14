@@ -1,0 +1,32 @@
+import { User } from "../../entities/User";
+import { IUserRepo } from "../../repos/IUserRepo";
+import { CreateUserDTO } from '../createUser/createUserDTO';
+
+class CreateUserUseCase {
+    constructor(private userRepo: IUserRepo) {}
+
+    async execute(dto: CreateUserDTO) {
+
+        const { firstName, lastName, email } = dto;
+
+        const userAlreadyExists = await this.userRepo.exists(email);
+
+        if (!userAlreadyExists) {
+            return null;
+        }
+
+        const user = new User(firstName, lastName, email);
+        const result = await this.userRepo.save(user);
+
+        if (!result) {
+            return null;
+        }
+
+        return result;
+    }
+
+}
+
+export {
+    CreateUserUseCase
+}
