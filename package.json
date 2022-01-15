@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "nodemon --exec ts-node --transpile-only --files ./src/index.ts --ignore ./tests",
     "test": "jest --coverage=false",
-    "test:coverage": "jest"
+    "test:coverage": "jest",
+    "migration:make": "knex --knexfile=./src/config/knexfile.ts migrate:make -x ts",
+    "migration:latest": "knex --knexfile=./src/config/knexfile.ts migrate:latest",
+    "migration:rollback": "knex --knexfile=./src/config/knexfile.ts migrate:rollback"
   },
   "keywords": [],
   "author": "",
@@ -26,6 +29,8 @@
     "cors": "^2.8.5",
     "dotenv": "^11.0.0",
     "express": "^4.17.2",
+    "knex": "^0.95.15",
+    "pg": "^8.7.1",
     "uuidv4": "^6.2.12"
   }
 }

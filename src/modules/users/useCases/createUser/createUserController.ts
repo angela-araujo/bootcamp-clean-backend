@@ -4,10 +4,12 @@ import { CreateUserDTO } from '../createUser/createUserDTO';
 import {
     IController,
     HttpRequest,
-    HttpResponse
+    HttpResponse,
+    ok,
+    fail
 } from '../../../../shared/app/Controller';
 
-class CreateUserController {
+class CreateUserController implements IController{
 
     public useCase: CreateUserUseCase;
 
@@ -19,15 +21,26 @@ class CreateUserController {
 
         console.log('Controller Request:', request);
 
-        const response: HttpResponse = {
-            statusCode: 200,
-            body: 'Funcionou'
+        if (!request.body.firstName || !request.body.lastName || !request.body.email) {
+
+            return fail('Informações faltando.', 400);
         }
 
-        return response;
+        const userDTO: CreateUserDTO = {
+            firstName: request.body.firstName,
+            lastName: request.body.lastName,
+            email: request.body.email
+        }
 
+        const userCreated = await this.useCase.execute(userDTO);
+
+        if (!userCreated) {
+
+            return fail('Usuário não criado.', 500);
+        }
+
+        return ok(userCreated);
     }
-
 
 }
 
